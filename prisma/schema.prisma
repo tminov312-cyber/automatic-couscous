@@ -1,0 +1,54 @@
+// Prisma schema for the paper-trading app.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id        Int        @id @default(autoincrement())
+  cashCents Int
+  positions Position[]
+  orders    Order[]
+}
+
+model Position {
+  id           Int     @id @default(autoincrement())
+  accountId    Int
+  symbol       String
+  quantity     Int
+  avgCostCents Int
+  account      Account @relation(fields: [accountId], references: [id])
+
+  @@unique([accountId, symbol])
+}
+
+model Order {
+  id         Int      @id @default(autoincrement())
+  accountId  Int
+  symbol     String
+  side       String   // "BUY" | "SELL"
+  quantity   Int
+  priceCents Int
+  simDate    String   // YYYY-MM-DD
+  createdAt  DateTime @default(now())
+  account    Account  @relation(fields: [accountId], references: [id])
+}
+
+model PriceBar {
+  symbol     String
+  date       String // YYYY-MM-DD
+  closeCents Int
+
+  @@id([symbol, date])
+  @@index([date])
+}
+
+model SimState {
+  id      Int    @id @default(autoincrement())
+  simDate String // YYYY-MM-DD
+}
