@@ -34,7 +34,7 @@ Use headphones. With the iPhone speaker the mic picks up its own output and sque
 ## Hosting it for free
 
 The workflow `.github/workflows/amplifier-pages.yml` publishes this folder to GitHub Pages
-whenever `amplifier/` changes on `main`. It can also be run manually from the Actions tab.
+whenever `amplifier/` changes on the default branch (`curing-backboard`). It can also be run manually from the Actions tab.
 The first time, set up Pages in the repo: **Settings › Pages › Source: GitHub Actions**.
 
 Any other static host (Netlify, Cloudflare Pages, Vercel) also works. Upload the `amplifier/` folder.
