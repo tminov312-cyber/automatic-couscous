@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Amplifier</title>
+  <meta name="description" content="Free sound amplifier for iPhone: boost voices, TV and music through your headphones.">
+  <meta name="theme-color" content="#0b0f19">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Amplifier">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <h1>Amplifier</h1>
+    <span id="status" class="pill">Off</span>
+  </header>
+
+  <main>
+    <!-- ===== AMPLIFY ===== -->
+    <section id="tab-amp" class="tab active">
+      <div class="source-switch" role="tablist" aria-label="Sound source">
+        <button class="seg active" data-source="mic">🎙️ Microphone</button>
+        <button class="seg" data-source="file">🎵 Audio file</button>
+      </div>
+
+      <div id="file-row" class="card hidden">
+        <label class="file-btn">Choose audio file
+          <input id="file-input" type="file" accept="audio/*,video/*">
+        </label>
+        <div id="file-name" class="muted">No file selected</div>
+        <audio id="file-audio" controls playsinline></audio>
+      </div>
+
+      <canvas id="viz" aria-label="Sound spectrum"></canvas>
+
+      <div class="meter-row">
+        <div class="meter"><div id="meter-fill"></div></div>
+        <span id="meter-db" class="mono">-∞ dB</span>
+      </div>
+
+      <button id="power" class="power" aria-pressed="false">
+        <span class="power-icon">⏻</span>
+        <span id="power-label">Start</span>
+      </button>
+
+      <div class="card">
+        <div class="row-head"><label for="volume">Boost</label><span id="volume-val" class="mono">+12 dB</span></div>
+        <input id="volume" type="range" min="0" max="40" step="1" value="12">
+      </div>
+
+      <div class="card">
+        <div class="row-head"><span>Presets</span></div>
+        <div id="presets" class="chips"></div>
+      </div>
+
+      <div class="card grid2">
+        <div>
+          <div class="row-head"><label for="balance">Balance L/R</label><span id="balance-val" class="mono">C</span></div>
+          <input id="balance" type="range" min="-1" max="1" step="0.05" value="0">
+        </div>
+        <div>
+          <div class="row-head"><label for="clarity">Speech clarity</label><span id="clarity-val" class="mono">0</span></div>
+          <input id="clarity" type="range" min="0" max="12" step="1" value="0">
+        </div>
+      </div>
+
+      <div class="card toggles">
+        <label class="toggle"><input id="noise-reduction" type="checkbox"><span>Noise reduction</span></label>
+        <label class="toggle"><input id="compressor-on" type="checkbox" checked><span>Loud sound protection</span></label>
+        <label class="toggle"><input id="mute" type="checkbox"><span>Mute</span></label>
+      </div>
+
+      <button id="record" class="record" disabled>● Record</button>
+      <p class="tip">🎧 Use headphones (wired or AirPods) to avoid squealing feedback.</p>
+    </section>
+
+    <!-- ===== EQUALIZER ===== -->
+    <section id="tab-eq" class="tab">
+      <div class="card">
+        <div class="row-head"><span>10‑band equalizer</span><button id="eq-reset" class="link">Reset</button></div>
+        <div id="eq" class="eq"></div>
+      </div>
+      <div class="card">
+        <div class="row-head"><label for="lowcut">Low cut (rumble filter)</label><span id="lowcut-val" class="mono">80 Hz</span></div>
+        <input id="lowcut" type="range" min="20" max="400" step="5" value="80">
+      </div>
+      <div class="card">
+        <div class="row-head"><label for="gate">Noise reduction threshold</label><span id="gate-val" class="mono">-55 dB</span></div>
+        <input id="gate" type="range" min="-90" max="-20" step="1" value="-55">
+      </div>
+      <div class="card">
+        <div class="row-head"><span>Save current settings as preset</span></div>
+        <div class="save-row">
+          <input id="preset-name" type="text" placeholder="My preset" maxlength="24">
+          <button id="preset-save" class="btn">Save</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== RECORDINGS ===== -->
+    <section id="tab-rec" class="tab">
+      <div class="card">
+        <div class="row-head"><span>Recordings</span><span class="muted small">kept on this device</span></div>
+        <ul id="rec-list" class="rec-list"><li class="muted">No recordings yet. Tap ● Record on the Amplify tab.</li></ul>
+      </div>
+    </section>
+
+    <!-- ===== SETTINGS ===== -->
+    <section id="tab-set" class="tab">
+      <div class="card toggles">
+        <label class="toggle"><input id="opt-echo" type="checkbox"><span>Echo cancellation</span></label>
+        <label class="toggle"><input id="opt-ns" type="checkbox"><span>iPhone built‑in noise suppression</span></label>
+        <label class="toggle"><input id="opt-agc" type="checkbox"><span>Automatic gain control</span></label>
+        <label class="toggle"><input id="opt-wake" type="checkbox" checked><span>Keep screen awake while on</span></label>
+        <label class="toggle"><input id="opt-stereo" type="checkbox"><span>Mono → both ears (recommended off for music files)</span></label>
+      </div>
+      <div class="card">
+        <div class="row-head"><label for="limit">Max output (safety limit)</label><span id="limit-val" class="mono">-3 dB</span></div>
+        <input id="limit" type="range" min="-24" max="0" step="1" value="-3">
+      </div>
+      <div class="card">
+        <h2>Install on iPhone (free)</h2>
+        <ol class="steps">
+          <li>Open this page in <b>Safari</b>.</li>
+          <li>Tap the <b>Share</b> button (square with ↑).</li>
+          <li>Choose <b>Add to Home Screen</b> → <b>Add</b>.</li>
+          <li>Open <b>Amplifier</b> from your home screen and allow the microphone.</li>
+        </ol>
+        <p class="muted small">Works offline after the first open. No account, no ads, no tracking — all audio stays on your phone.</p>
+      </div>
+      <div class="card">
+        <button id="reset-all" class="btn danger">Reset all settings</button>
+      </div>
+      <p class="muted small center">Amplifier v1.0 · Not a medical device. Keep volume at a safe level.</p>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button class="tabbtn active" data-tab="amp"><span>🔊</span>Amplify</button>
+    <button class="tabbtn" data-tab="eq"><span>🎚️</span>Equalizer</button>
+    <button class="tabbtn" data-tab="rec"><span>⏺️</span>Recordings</button>
+    <button class="tabbtn" data-tab="set"><span>⚙️</span>Settings</button>
+  </nav>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
