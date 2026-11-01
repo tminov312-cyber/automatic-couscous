@@ -2,7 +2,7 @@ name: Deploy Amplifier app to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [curing-backboard]
     paths: ['amplifier/**', '.github/workflows/amplifier-pages.yml']
   workflow_dispatch:
 
