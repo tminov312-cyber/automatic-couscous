@@ -24,8 +24,7 @@ All audio is processed on your phone and nothing is uploaded.
 
 ## Install on iPhone (free)
 
-1. Open the app link in **Safari**. After GitHub Pages is enabled the link is
-   `https://tminov312-cyber.github.io/automatic-couscous/`.
+1. Open `https://tminov312-cyber.github.io/automatic-couscous/` in **Safari**.
 2. Tap **Share** (square with ↑), then **Add to Home Screen**, then **Add**.
 3. Open **Amplifier** from the Home Screen, tap **Start** and allow the microphone.
 
@@ -33,17 +32,18 @@ Use headphones. With the iPhone speaker the mic picks up its own output and sque
 
 ## Hosting it for free
 
-The workflow `.github/workflows/amplifier-pages.yml` publishes this folder to GitHub Pages
-whenever `amplifier/` changes on the default branch (`curing-backboard`). It can also be run manually from the Actions tab.
-The first time, set up Pages in the repo: **Settings › Pages › Source: GitHub Actions**.
+GitHub Pages serves this `docs/` folder straight from the default branch.
+To set it up: **Settings › Pages › Build and deployment › Source: Deploy from a branch**,
+then choose **Branch: `curing-backboard`**, folder **`/docs`**, and click **Save**.
+After a minute or two the app is at `https://tminov312-cyber.github.io/automatic-couscous/`.
 
-Any other static host (Netlify, Cloudflare Pages, Vercel) also works. Upload the `amplifier/` folder.
+Any other static host (Netlify, Cloudflare Pages, Vercel) also works. Upload the `docs/` folder.
 It must be served over **HTTPS**, because iPhones only allow the microphone on secure pages.
 
 ## Run locally
 
 ```bash
-cd amplifier && python3 -m http.server 8000
+cd docs && python3 -m http.server 8000
 # open http://localhost:8000 (the microphone works on localhost)
 ```
 
